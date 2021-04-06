@@ -109,7 +109,7 @@ if __name__ == '__main__':
     # print(base_pic_folder_path)
     print('Disassembling photos...')
     # it will take some time, be patient
-    # cat_pic_into_pieces(base_pic_folder_path, save_folder, 128, 128)
+    cat_pic_into_pieces(base_pic_folder_path, save_folder, 128, 128)
     print('Disassembling done!')
     print("-" * 120)
     print("Getting features...")
@@ -122,8 +122,8 @@ if __name__ == '__main__':
     print("Something with pandas")
 
     # ???
-    # df = DataFrame(data=features, columns=full_feature_names)
-    # df.to_csv('textures_data.csv', sep=',', index=False)
+    df = DataFrame(data=features, columns=full_feature_names)
+    df.to_csv('textures_data.csv', sep=',', index=False)
     print("saved")
     print("-" * 120)
     # CLASSIFICATION
