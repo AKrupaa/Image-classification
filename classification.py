@@ -84,6 +84,9 @@ def read_pics_and_get_features(base_path_to_cropped_pics):
     # iterssss = 0
     for subdir, dirs, files in os.walk(base_path_to_cropped_pics):
         for file in files[:10]:
+
+            # cos = files[:10]
+            # cos2 = files[10:]
             # iterssss = iterssss +1
             # here we go
             _, category_folder = os.path.split(subdir)
