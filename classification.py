@@ -1,6 +1,7 @@
 from glob import glob
 
 import skimage
+from prompt_toolkit.application import get_app
 from skimage.feature import greycomatrix, greycoprops
 import numpy as np
 from pandas import DataFrame
@@ -80,8 +81,10 @@ def get_features(array):
 
 def read_pics_and_get_features(base_path_to_cropped_pics):
     features_array = []
+    # iterssss = 0
     for subdir, dirs, files in os.walk(base_path_to_cropped_pics):
-        for file in files:
+        for file in files[:10]:
+            # iterssss = iterssss +1
             # here we go
             _, category_folder = os.path.split(subdir)
             # open a image
@@ -89,7 +92,11 @@ def read_pics_and_get_features(base_path_to_cropped_pics):
             # grey
             grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             # for every image, get features, lol
-            features_array.append(get_features(np.array(grey)))
+            f = get_features(grey)
+            f.append(category_folder)
+            features_array.append(f)
+            # if iterssss > 5:
+            #     break
 
     return features_array
 
@@ -109,16 +116,16 @@ if __name__ == '__main__':
     # print(base_pic_folder_path)
     print('Disassembling photos...')
     # it will take some time, be patient
-    cat_pic_into_pieces(base_pic_folder_path, save_folder, 128, 128)
-    print('Disassembling done!')
-    print("-" * 120)
-    print("Getting features...")
+    # cat_pic_into_pieces(base_pic_folder_path, save_folder, 128, 128)
+    # print('Disassembling done!')
+    # print("-" * 120)
+    # print("Getting features...")
     features = read_pics_and_get_features(os.path.join(base_pic_folder_path, save_folder))
     print("GOT IT")
     print("-" * 120)
     #  ???
     full_feature_names = get_full_names()
-    # full_feature_names.append("Category")
+    full_feature_names.append("Category")
     print("Something with pandas")
 
     # ???
@@ -127,7 +134,7 @@ if __name__ == '__main__':
     print("saved")
     print("-" * 120)
     # CLASSIFICATION
-
+    #
     from sklearn import svm
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import accuracy_score
@@ -144,13 +151,16 @@ if __name__ == '__main__':
     print("Train set")
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.33)
     print("classifier fit")
-    lab_enc = preprocessing.LabelEncoder()
-    encoded = lab_enc.fit_transform(y_train)
+    # lab_enc = preprocessing.LabelEncoder()
+    # encoded = lab_enc.fit_transform(y_train)
     # y_train = y_train.astype('uint8')
     # ValueError: Unknown label type: 'continuous'
-    classifier.fit(X_train, encoded)
+    classifier.fit(X_train, y_train)
     print("classifier predict")
     y_predict = classifier.predict(X_test)
+    # raise ValueError("Classification metrics can't handle a mix of {0} "
+    # ValueError: Classification metrics can't handle a mix of continuous and multiclass targets
+    # PO TRZECH GODZINACH PRACY : - )
     acc = accuracy_score(y_test, y_predict)
     print(f'accuracy score = {acc}')
     print("-" * 120)
